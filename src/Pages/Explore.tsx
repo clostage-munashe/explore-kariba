@@ -3,6 +3,7 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getListings, type Listing } from '../api'
 
 type Category = 'Stays' | 'Food' | 'Activities' | 'Nature' | 'Events'
+type ExploreCategory = Category | 'All places'
 
 const categories: Category[] = [
   'Stays',
@@ -25,8 +26,8 @@ function Explore() {
   const [searchParams] = useSearchParams()
 
   const pageCategory = categoryPaths[pathname]
-  const [activeCategory, setActiveCategory] = useState(
-    pageCategory || searchParams.get('category') || 'All places',
+  const [activeCategory, setActiveCategory] = useState<ExploreCategory>(
+    (pageCategory || searchParams.get('category') || 'All places') as ExploreCategory,
   )
   const [search, setSearch] = useState(searchParams.get('q') || '')
   const [listings, setListings] = useState<Listing[]>([])
@@ -37,7 +38,7 @@ function Explore() {
   useEffect(() => {
     const params = new URLSearchParams(locationSearch)
     setActiveCategory(
-      pageCategory || params.get('category') || 'All places',
+      (pageCategory || params.get('category') || 'All places') as ExploreCategory,
     )
     setSearch(params.get('q') || '')
   }, [locationSearch, pageCategory])
